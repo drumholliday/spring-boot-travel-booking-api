@@ -5,7 +5,8 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.4</version>
+		<!--<version>3.5.4</version>-->
+		<version>3.3.6</version> <!-- changed version to 3.3.6 as the instructor suggested in the notes-->
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
@@ -47,7 +48,9 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<optional>true</optional>
+			<version>1.18.36</version> <!-- added version according to the notes and video updates for the project	 -->
+			<!--<optional>true</optional> commented out optional to add scope below-->
+			<scope>provided</scope> <!-- added scope as the notes mention -->
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -66,6 +69,7 @@
 						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
+							<version>1.18.36</version> <!--added the version as the notes mention -->
 						</path>
 					</annotationProcessorPaths>
 				</configuration>
