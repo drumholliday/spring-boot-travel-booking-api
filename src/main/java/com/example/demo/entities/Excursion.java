@@ -53,14 +53,14 @@ public class Excursion {
     @UpdateTimestamp
     private Date last_update;
 
-    // Many excursions belong to one vacation  (COMMENTED UNTIL Vacation.java EXISTS)
-    // @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    // @JoinColumn(name = "vacation_id", nullable = false)
-    // private Vacation vacation;
+    // Many excursions belong to one vacation
+     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+     @JoinColumn(name = "vacation_id", nullable = false)
+     private Vacation vacation;
 
-    // Read-only Foreign Key mirror for vacation_id (matches UML pattern)
-    // @Column(name = "vacation_id", insertable = false, updatable = false)
-    // private Long vacation_ID;
+    // Read-only Foreign Key mirror for vacation_id
+     @Column(name = "vacation_id", insertable = false, updatable = false)
+     private Long vacation_ID;
 
     // One excursion can appear in many cart items
     @OneToMany(mappedBy = "excursion", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
