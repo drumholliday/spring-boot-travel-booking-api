@@ -15,7 +15,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 // Import Date (java type for timestamp columns)
 import java.util.Date;
-import java.util.Set; //  Set will be used later when Customers is created.
+import java.util.Set;
 
 @Entity // tells Java Persistence API (JPA) this class maps to a table.
 @Table(name = "divisions") // explicitly names the table (divisions)
@@ -61,9 +61,6 @@ public class Division {
     @Column(name = "country_id", insertable = false, updatable = false) // Direct access to FK column from Division class.
     private Long country_ID;
 
-    // ** Future one to many customers
-    // From UML: divisions -> customers (one division has many customers)
-    // Add this AFTER the Customer entity exists, so it compiles cleanly.
-     @OneToMany(mappedBy = "division", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-     private Set<Customer> customers;
+    @OneToMany(mappedBy = "division", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Customer> customers;
 }

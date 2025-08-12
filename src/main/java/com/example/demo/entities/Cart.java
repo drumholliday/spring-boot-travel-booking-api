@@ -11,7 +11,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.util.Date;
-// import java.util.Set; // Uncomment later when CartItem exists
+import java.util.Set;
 
 @Entity // Maps this class to a DB table
 @Table(name = "carts") // Explicit table name
@@ -62,7 +62,6 @@ public class Cart {
     @Column(name = "customer_id", insertable = false, updatable = false)
     private Long customer_ID;
 
-    // Uncomment after CartItem.java exists
-    // @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    // private Set<CartItem> cartItem;
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<CartItem> cartItem;
 }

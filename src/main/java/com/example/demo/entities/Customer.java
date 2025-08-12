@@ -14,7 +14,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
-// import java.util.Set; // Will be used later for carts
+import java.util.Set; // Will be used later for carts
 
 @Entity // Marks this class as a JPA entity
 @Table(name = "customers") // Explicitly names the table as 'customers'
@@ -65,10 +65,8 @@ public class Customer {
     private Long division_ID;
 
     // One to many Carts
-    // From UML customers -> carts
-    // Uncomment after Cart.java is created to prevent any issues
-//    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private Set<Cart> carts;
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Cart> carts;
 
 
 }
