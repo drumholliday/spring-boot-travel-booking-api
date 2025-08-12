@@ -64,6 +64,6 @@ public class Division {
     // ** Future one to many customers
     // From UML: divisions -> customers (one division has many customers)
     // Add this AFTER the Customer entity exists, so it compiles cleanly.
-    // @OneToMany(mappedBy = "division", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    // private Set<Customer> customers;
+     @OneToMany(mappedBy = "division", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+     private Set<Customer> customers;
 }
