@@ -29,10 +29,12 @@ public class Customer {
     @Column(name = "customer_id", nullable = false)
     private Long id;
 
-    @Column(name = "first_name", nullable = false, length = 50)
+    // CHANGED name = first_name to customer_first_name
+    @Column(name = "customer_first_name", nullable = false, length = 50)
     private String firstName;
 
-    @Column(name = "last_name", nullable = false, length = 50)
+    // CHANGED name = last_name to customer_last_name
+    @Column(name = "customer_last_name", nullable = false, length = 50)
     private String lastName;
 
     @Column(name = "address", nullable = false, length = 255)

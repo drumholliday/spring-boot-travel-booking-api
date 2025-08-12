@@ -30,8 +30,9 @@ public class Division {
     @Column(name = "division_id", nullable = false) // maps the field to the division_id column and enforces not-null.
     private Long id;
 
-    // Maps to division_name column
-    @Column(name = "division_name")
+    // Maps to division column
+    // CHANGED name = division_name to division to match DB
+    @Column(name = "division")
     private String division_name;
 
     @Column(name = "create_date")
