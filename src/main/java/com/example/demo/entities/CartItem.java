@@ -15,6 +15,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Set;
 
 @Entity // Marks this class as a JPA entity
 @Table(name = "cart_items") // Explicitly names the table
@@ -27,16 +28,16 @@ public class CartItem {
 
     @Id // Primary key
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cart_item_id", nullable = false)
+        @Column(name = "cart_item_id", nullable = false)
     private Long id;
 
-    // Price for this cart item (BigDecimal for money)
-    @Column(name = "excursion_price", precision = 12, scale = 2)
-    private BigDecimal excursion_price;
+//    // Price for this cart item (BigDecimal for money)
+//    @Column(name = "excursion_price", precision = 12, scale = 2)
+//    private BigDecimal excursion_price;
 
-    // Quantity in the cart
-    @Column(name = "quantity")
-    private Integer quantity;
+//    // Quantity in the cart
+//    @Column(name = "quantity")
+//    private Integer quantity;
 
     @Column(name = "create_date")
     @CreationTimestamp
@@ -55,12 +56,21 @@ public class CartItem {
     @Column(name = "cart_id", insertable = false, updatable = false)
     private Long cart_ID;
 
-    // Many cart items relate to one excursion
+    // Many cart items relate to one vacation
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "excursion_id", nullable = false)
-    private Excursion excursion;
+    @JoinColumn(name = "vacation_id", nullable = false)
+    private Vacation vacation;
 
     // Read-only mirror of Foreign Key (excursion_id)
-    @Column(name = "excursion_id", insertable = false, updatable = false)
-    private Long excursion_ID;
+    @Column(name = "vacation_id", insertable = false, updatable = false)
+    private Long vacation_ID;
+
+    // many-to-many with excursions via join table
+    @ManyToMany
+    @JoinTable(
+            name = "excursion_cartitem",
+            joinColumns = @JoinColumn(name = "cart_item_id"),
+            inverseJoinColumns = @JoinColumn(name = "excursion_id")
+    )
+    private Set<Excursion> excursions;
 }

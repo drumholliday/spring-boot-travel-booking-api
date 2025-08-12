@@ -37,11 +37,13 @@ public class Excursion {
 
     // Price for this excursion (BigDecimal for money)
     // NOTE: UML spells the column 'excusion_price' (missing 'r'); mapping matches UML exactly
-    @Column(name = "excusion_price", precision = 12, scale = 2)
-    private BigDecimal excusion_price;
+    // CHANGED IT to excursion_price and precision to 19.
+    @Column(name = "excursion_price", precision = 19, scale = 2)
+    private BigDecimal excursion_price;
 
     // Optional image URL
-    @Column(name = "image_URL")
+    // CHANGED from image_URL to image_url
+    @Column(name = "image_url")
     private String image_URL;
 
     // Auto-managed timestamps
@@ -62,7 +64,7 @@ public class Excursion {
      @Column(name = "vacation_id", insertable = false, updatable = false)
      private Long vacation_ID;
 
-    // One excursion can appear in many cart items
-    @OneToMany(mappedBy = "excursion", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    // Back-reference for the many-to-many via excursion_cartitem
+    @ManyToMany(mappedBy = "excursions", fetch = FetchType.LAZY)
     private Set<CartItem> cartitems;
 }
