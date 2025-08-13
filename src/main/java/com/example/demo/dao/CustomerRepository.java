@@ -8,4 +8,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 @CrossOrigin("http://localhost:4200")
 @RepositoryRestResource(collectionResourceRel = "customers", path = "customers")
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
+    // Create an existence check to the repo using a boolean amd avoid duplicates.
+    boolean existsByPhone(String phone);
 }
