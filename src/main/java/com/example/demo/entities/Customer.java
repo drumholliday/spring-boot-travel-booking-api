@@ -1,5 +1,9 @@
 package com.example.demo.entities;
 
+//ADD THESE IMPORTS
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 // Import used to bring in annotations (@Entity, @Id, etc.) that map the class to a database table
 import jakarta.persistence.*;
 
@@ -22,6 +26,8 @@ import java.util.Set; // Will be used later for carts
 @AllArgsConstructor // Lombok: generates an all-arg constructor
 @Getter // Lombok: generates getters
 @Setter // Lombok: generates setters
+// ADD JsonIgnoreProperties
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 
 public class Customer {
     @Id // Primary Key
@@ -41,7 +47,9 @@ public class Customer {
     private String address;
 
     @Column(name = "postal_code", length = 20)
-    private String postal_code;
+    // CHANGED TO camelCase FOR CONSISTENCY
+//    private String postal_code;
+    private String postalCode;
 
     @Column(name = "phone", nullable = false, length = 20)
     private String phone;
@@ -55,8 +63,13 @@ public class Customer {
     private Date last_update;
 
     // Many customers belong to one division
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "division_id", nullable = false)
+//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+//    @JoinColumn(name = "division_id", nullable = false)
+
+    // Made = true since existing rows have NULL
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    // DB shows division_id is nullable so changed to = true.
+    @JoinColumn(name = "division_id", nullable = true)
     private Division division;
 
     // Mirrors the same column as @JoinColumn above, but isn't written by JPA
@@ -68,6 +81,8 @@ public class Customer {
 
     // One to many Carts
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    // ADDED @JsonIgnore to prevent recursion or large payloads when returning Customer.
+    @JsonIgnore
     private Set<Cart> carts;
 
 
