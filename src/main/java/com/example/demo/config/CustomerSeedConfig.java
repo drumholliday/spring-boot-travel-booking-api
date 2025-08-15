@@ -46,7 +46,8 @@ public class CustomerSeedConfig {
             c.setFirstName(first);
             c.setLastName(last);
             c.setAddress(address);
-            c.setPostal_code(postal);
+//            c.setPostal_code(postal);
+            c.setPostalCode(postal);
             c.setPhone(phone);
 
             // Create a Division reference with just the ID set. JPA will write division_id on customer.
