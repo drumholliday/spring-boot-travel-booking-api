@@ -33,7 +33,9 @@ public class Division {
     // Maps to division column
     // CHANGED name = division_name to division to match DB
     @Column(name = "division")
-    private String division_name;
+//    private String division_name;
+    // CHANGED TO name
+    private String name;
 
     @Column(name = "create_date")
     @CreationTimestamp // Hibernate sets create_date when the row is first inserted.
