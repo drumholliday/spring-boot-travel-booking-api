@@ -96,9 +96,19 @@ public class CheckoutServiceImplementation implements CheckoutService  {
             if (customer.getId() == null) {
                 customerRepo.save(customer);
             }
+            // Save and flush the cart so MySQL generates cart_id
             cartRepo.save(cart);
-            // Fix Bug: Previously saved items only when items.isEmpty() which never saved items.
+            cartRepo.flush();
+//            // Fix Bug: Previously saved items only when items.isEmpty() which never saved items.
+//            if (items != null && !items.isEmpty()) {
+//                cartItemRepo.saveAll(items);
+//            }
+            // Insert the items that reference cart_id
             if (items != null && !items.isEmpty()) {
+                for (CartItem item : items) {
+                    // Ensure Foreign Key cart_id is set on each item
+                    item.setCart(cart);
+                }
                 cartItemRepo.saveAll(items);
             }
 
