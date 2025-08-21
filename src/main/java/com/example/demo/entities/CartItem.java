@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.Set;
 
 @Entity // Marks this class as a JPA entity
+@Access(AccessType.FIELD) // Tells Hibernate to ignore getters/setters for persistence state
 @Table(name = "cart_items") // Explicitly names the table
 @NoArgsConstructor
 @AllArgsConstructor
@@ -52,9 +53,9 @@ public class CartItem {
     @JoinColumn(name = "cart_id", nullable = false)
     private Cart cart;
 
-    // Read-only mirror of FK (cart_id)
-    @Column(name = "cart_id", insertable = false, updatable = false)
-    private Long cart_ID;
+//    // Read-only mirror of FK (cart_id)
+//    @Column(name = "cart_id", insertable = false, updatable = false)
+//    private Long cart_ID;
 
     // Many cart items relate to one vacation
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

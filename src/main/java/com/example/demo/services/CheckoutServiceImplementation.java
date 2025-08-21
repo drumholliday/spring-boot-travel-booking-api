@@ -49,18 +49,24 @@ public class CheckoutServiceImplementation implements CheckoutService  {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cart required");
             }
 
+            // Resolve Customer and Division
             // Load managed Customer from DB when ID provided
             Customer inbound = purchase.getCustomer();
-            Customer customer;
+            Customer customer = (inbound.getId() != null)
+                ? customerRepo.findById(inbound.getId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer Id not found"))
+                : inbound;
 
-            if (inbound.getId() != null) {
-                // Replace with the managed entity that brings division and divisionId
-                customer = customerRepo.findById(inbound.getId())
-                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "customer.id not found"));
-            } else {
-                // Creating a new customer from inbound JSON
-                customer = inbound;
-            }
+            // Commented out code 62-70
+//            Long divisionId = null;
+//            if (inbound.getId() != null) {
+//                // Replace with the managed entity that brings division and divisionId
+//                customer = customerRepo.findById(inbound.getId())
+//                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "customer.id not found"));
+//            } else {
+//                // Creating a new customer from inbound JSON
+//                customer = inbound;
+//            }
 
             // Ensure the Customer has a valid Division without requiring the frontend to send it
             Long divisionId = null;
@@ -82,88 +88,63 @@ public class CheckoutServiceImplementation implements CheckoutService  {
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "division.id not found"));
             customer.setDivision(div);
 
-            // Wire Cart and CartItems relationships
-            Cart cart = purchase.getCart();
-            cart.setCustomer(customer);
-
-            Set<CartItem> items = purchase.getCartItems();
-            if (items != null) {
-                for (CartItem item : items) {
-                    item.setCart(cart);
-                }
-            }
-            // Save new customer if needed
+            // Persist customer if new
             if (customer.getId() == null) {
                 customerRepo.save(customer);
             }
-            // Save and flush the cart so MySQL generates cart_id
-            cartRepo.save(cart);
-            cartRepo.flush();
-//            // Fix Bug: Previously saved items only when items.isEmpty() which never saved items.
-//            if (items != null && !items.isEmpty()) {
-//                cartItemRepo.saveAll(items);
-//            }
-            // Insert the items that reference cart_id
+
+            // Wire Cart and CartItems relationships
+            Cart cart = purchase.getCart();
+            // Set cart id to null before saving as done in CartItem
+            cart.setId(null);
+            cart.setCustomer(customer);
+
+            // Reset children coming from inbound JSON to avoid bad items being cascaded and start clean
+            cart.setCartItem(new java.util.HashSet<>());
+
+            // Attach items to both sides and validate vacation
+            Set<CartItem> items = purchase.getCartItems();
             if (items != null && !items.isEmpty()) {
                 for (CartItem item : items) {
-                    // Ensure Foreign Key cart_id is set on each item
-                    item.setCart(cart);
+                    // Ensure fresh insert
+                    item.setId(null);
+                    // Validate vacation
+                    if (item.getVacation() == null || item.getVacation().getId() == null) {
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Each cartItem requires a vacation.id");
                 }
+                    // Set item.setCart(this) and adds to parent set.
+                     cart.addItem(item);
+                }
+            }
+            // Save parent first
+            cartRepo.saveAndFlush(cart);
+            // Sys Print to check if the id is now > 0
+            System.out.println("Cart ID after flushed: " + cart.getId());
+
+            // Explicitly save children
+            if(items != null && !items.isEmpty()) {
+                cartItemRepo.saveAll(items);
+            }
+
+            // TEMP LOGS TO DEBUG WHILE TESTING
+            System.out.println("Cart ID after flush: " + cart.getId());
+                if (items != null) {
+                for (CartItem it : items) {
+                 System.out.println("Item -> cartId? " + (it.getCart() != null ? it.getCart().getId() : null)
+                         + " | vacationId? " + (it.getVacation() != null ? it.getVacation().getId() : null));
+                }
+            }
+            // Insert children explicitly
+            if (items != null && !items.isEmpty()) {
                 cartItemRepo.saveAll(items);
             }
 
             // Return tracking number
             String trackingNumber = UUID.randomUUID().toString();
-            return new PurchaseResponse(trackingNumber);
+            cart.setOrderTrackingNumber(trackingNumber);
+            // Update with tracking
+            cartRepo.save(cart);
 
-              //  COMMENTED OUT AND REPLACED WITH ABOVE
-//            // Minimal Part F implementation: just return a tracking number.
-//            // (We’ll wire up saving Customer/Cart/CartItems in a later step.)
-//
-//            // Unpack DTO by pulling customer, cart, cartItems out of the Purchase object the controller received.
-//            Customer customer = purchase.getCustomer();
-//            Cart cart = purchase.getCart();
-//            Set<CartItem> items = purchase.getCartItems();
-//
-//            // Attach a managed Division b/c Angular sends customer.division.id and JPA needs a
-//            // managed Division entity for the Foreign Key division_id so it must be looked up.
-//            if (customer.getDivision() == null || customer.getDivision().getId() == null) {
-//            // If it is missing or invalid throw IllegalArgumentException which replaces a generic 500 error.
-//            throw new IllegalArgumentException("customer.division.id required");
-//        }
-//        //  Setting the managed div back on customer ensures Hibernate writes a valid division_id (managed division reference).
-//        Division div = divisionRepo.findById(customer.getDivision().getId()).orElseThrow(() -> new IllegalArgumentException("Invalid division id: " + customer.getDivision().getId()));
-//        customer.setDivision(div);
-//
-//        // Establishes Patent/Child Links
-//        // carts.customer_id points to customers_customer_id
-//        // cart_items.cart_id points to carts.cart_id
-//        cart.setCustomer(customer);
-//        if (items != null) {
-//            for (CartItem it : items) {
-//                it.setCart(cart);
-//            }
-//        }
-//
-//        // Call all repos explicitly in case entity mappings don't have cascading set up. Writes rows to MySQL
-//        customerRepo.save(customer); //insert a customer
-//        cartRepo.save(cart); // insert the cart after customer is known
-//        if (items != null && items.isEmpty()) {
-//            cartItemRepo.saveAll(items); //inserts the line items now that cart_id is known.
-//        }
-//
-//        // String trackingNumber = generateTrackingNumber();
-//        // Generate a Unique tracking number per order and return to the frontend
-//        String trackingNumber = UUID.randomUUID().toString();
-//        return new PurchaseResponse(trackingNumber);
-//    }
+            return new PurchaseResponse(trackingNumber);
     }
 }
-
-//    private String generateTrackingNumber() {
-//        return UUID.randomUUID()
-//                .toString()
-//                .replace("-", "")
-//                .substring(0, 16)
-//                .toUpperCase();
-//    }
