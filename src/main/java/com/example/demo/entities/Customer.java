@@ -4,6 +4,8 @@ package com.example.demo.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 // Import used to bring in annotations (@Entity, @Id, etc.) that map the class to a database table
 import jakarta.persistence.*;
 
@@ -47,6 +49,7 @@ public class Customer {
     private String address;
 
     @Column(name = "postal_code", length = 20)
+    @JsonProperty("postal_code")
     // CHANGED TO camelCase FOR CONSISTENCY
 //    private String postal_code;
     private String postalCode;
