@@ -12,6 +12,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PurchaseResponse {
     // ADDED @JsonProperty annotation to make the Json name match what Angular reads.
-    @JsonProperty("trackingNumber")
+    @JsonProperty("orderTrackingNumber")
     private String orderTrackingNumber;
 }
