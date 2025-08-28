@@ -3,6 +3,12 @@ package com.example.demo.entities;
 // Import used tp bring in annotations (@Entity, @ID etc..) that map the class to a database table
 import jakarta.persistence.*;
 
+// ADDED Json Imports
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 // Import Lombok annotations to auto-generate constructors, getters, and setters.
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -37,6 +43,25 @@ public class Division {
     // CHANGED TO name
     private String name;
 
+    // ADDED output alias so frontend can read division if it expects that key
+    @JsonProperty("division")
+    public String getDivisionLabel() {
+        return name;
+    }
+
+    // ADDED compatibility for division.division_name
+    @JsonProperty("division_name")
+    public String getDivisionNameTwo() { return name; }
+
+    @JsonAlias({"division_name"})
+    public void setDivisionNameTwo(String v) { this.name = v; }
+
+    // ADDED to accept either division or name on input which maps to name
+    @JsonAlias({"division"})
+    public void setDivisionLabel(String value) {
+        this.name = value;
+    }
+
     @Column(name = "create_date")
     @CreationTimestamp // Hibernate sets create_date when the row is first inserted.
     private Date create_date;
@@ -52,6 +77,8 @@ public class Division {
 
     // The Foreign Key column in divisions table is country_id, linking to countries.country_id from the Country Entity.
     @JoinColumn(name = "country_id", nullable = false)
+    // ADDED JsonIgnore to tell Jackson to Ignore the lazy country field when serializing a Division.
+    @JsonIgnore
     private Country country;
 
     // Expose the Foreign Key as a read only scalar to match the UML's country_ID
@@ -61,9 +88,15 @@ public class Division {
     // Set insertable = false and updatable = false makes it read only.
     // *** Don't set country_ID directly, ALWAYS set the relationship via country.
     // The country_ID value will reflect the Foreign Key stored in the DB after persistence.
+    // ADDED JsonProperty to emit JSON as country_id
+    @JsonProperty("country_id")
+    // ADDED JsonAlias to accept either country_ID or country_id
+    @JsonAlias({"country_ID"})
     @Column(name = "country_id", insertable = false, updatable = false) // Direct access to FK column from Division class.
     private Long country_ID;
 
     @OneToMany(mappedBy = "division", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    // ADDED JsonIgnore b/c Jackson tries to serialize all properties of Division. Tells Jackson to ignore customers.
+    @JsonIgnore
     private Set<Customer> customers;
 }
