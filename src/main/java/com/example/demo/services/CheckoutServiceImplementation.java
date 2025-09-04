@@ -121,10 +121,10 @@ public class CheckoutServiceImplementation implements CheckoutService  {
             // Sys Print to check if the id is now > 0
             System.out.println("Cart ID after flushed: " + cart.getId());
 
-            // Explicitly save children
-            if(items != null && !items.isEmpty()) {
-                cartItemRepo.saveAll(items);
-            }
+//            // Explicitly save children
+//            if(items != null && !items.isEmpty()) {
+//                cartItemRepo.saveAll(items);
+//            }
 
             // TEMP LOGS TO DEBUG WHILE TESTING
             System.out.println("Cart ID after flush: " + cart.getId());
