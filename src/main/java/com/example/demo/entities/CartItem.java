@@ -1,6 +1,7 @@
 package com.example.demo.entities;
 
 // JPA annotations
+
 import jakarta.persistence.*;
 
 // Lombok (auto getters/setters/constructors)
@@ -13,7 +14,6 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
 
@@ -29,16 +29,8 @@ public class CartItem {
 
     @Id // Primary key
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-        @Column(name = "cart_item_id", nullable = false)
+    @Column(name = "cart_item_id", nullable = false)
     private Long id;
-
-//    // Price for this cart item (BigDecimal for money)
-//    @Column(name = "excursion_price", precision = 12, scale = 2)
-//    private BigDecimal excursion_price;
-
-//    // Quantity in the cart
-//    @Column(name = "quantity")
-//    private Integer quantity;
 
     @Column(name = "create_date")
     @CreationTimestamp
@@ -52,10 +44,6 @@ public class CartItem {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "cart_id", nullable = false)
     private Cart cart;
-
-//    // Read-only mirror of FK (cart_id)
-//    @Column(name = "cart_id", insertable = false, updatable = false)
-//    private Long cart_ID;
 
     // Many cart items relate to one vacation
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
