@@ -1,7 +1,5 @@
-//package com.example.democodecountry.config;
 package com.example.demo.config;
 
-//import com.example.democodecountry.entities.Country;
 import com.example.demo.entities.Country;
 import com.example.demo.entities.Customer;
 import com.example.demo.entities.Division;
@@ -36,8 +34,8 @@ public class RestDataConfig implements RepositoryRestConfigurer {
      * <p>
      * Set page configuration parameters
      *
-     * @param config
-     * @param cors
+     * @param config the RepositoryRestConfiguration used to customize settings for the repository,
+     * @param cors the CorsRegistry used to configure mapping for CORS.
      */
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry cors) {

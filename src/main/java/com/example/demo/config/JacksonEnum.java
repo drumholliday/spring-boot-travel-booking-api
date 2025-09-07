@@ -1,7 +1,8 @@
 package com.example.demo.config;
 
 // Mapper Feature
-import com.fasterxml.jackson.databind.MapperFeature ;
+
+import com.fasterxml.jackson.databind.MapperFeature;
 // Spring Boot Hook for global ObjectMapper
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Configuration;
