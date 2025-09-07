@@ -1,6 +1,7 @@
 package com.example.demo.entities;
 
 // Import used tp bring in annotations (@Entity, @ID etc..) that map the class to a database table
+
 import jakarta.persistence.*;
 
 // ADDED Json Imports
@@ -51,10 +52,14 @@ public class Division {
 
     // ADDED compatibility for division.division_name
     @JsonProperty("division_name")
-    public String getDivisionNameTwo() { return name; }
+    public String getDivisionNameTwo() {
+        return name;
+    }
 
     @JsonAlias({"division_name"})
-    public void setDivisionNameTwo(String v) { this.name = v; }
+    public void setDivisionNameTwo(String v) {
+        this.name = v;
+    }
 
     // ADDED to accept either division or name on input which maps to name
     @JsonAlias({"division"})
@@ -92,7 +97,8 @@ public class Division {
     @JsonProperty("country_id")
     // ADDED JsonAlias to accept either country_ID or country_id
     @JsonAlias({"country_ID"})
-    @Column(name = "country_id", insertable = false, updatable = false) // Direct access to FK column from Division class.
+    @Column(name = "country_id", insertable = false, updatable = false)
+    // Direct access to FK column from Division class.
     private Long country_ID;
 
     @OneToMany(mappedBy = "division", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
