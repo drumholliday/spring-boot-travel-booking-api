@@ -1,9 +1,9 @@
 package com.example.demo.entities;
 
 //ADD THESE IMPORTS
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 // Import used to bring in annotations (@Entity, @Id, etc.) that map the class to a database table
@@ -29,7 +29,7 @@ import java.util.Set; // Will be used later for carts
 @Getter // Lombok: generates getters
 @Setter // Lombok: generates setters
 // ADD JsonIgnoreProperties
-@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 
 public class Customer {
     @Id // Primary Key
@@ -51,7 +51,6 @@ public class Customer {
     @Column(name = "postal_code", length = 20)
     @JsonProperty("postal_code")
     // CHANGED TO camelCase FOR CONSISTENCY
-//    private String postal_code;
     private String postalCode;
 
     @Column(name = "phone", nullable = false, length = 20)
@@ -64,10 +63,6 @@ public class Customer {
     @Column(name = "last_update")
     @UpdateTimestamp // Hibernate updates when the row changes
     private Date last_update;
-
-    // Many customers belong to one division
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @JoinColumn(name = "division_id", nullable = false)
 
     // Made = true since existing rows have NULL
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
