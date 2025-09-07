@@ -6,12 +6,15 @@ import com.example.demo.services.PurchaseResponse; // outgoing DTO
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/checkout") // sets the base URL path for all end points in this controller
-@CrossOrigin("http://localhost:4200") // allows the Angular app running on port 4200 to call this API from the browser (CORS).
+// sets the base URL path for all end points in this controller
+@RequestMapping("/api/checkout")
+// allows the Angular app running on port 4200 to call this API from the browser (CORS).
+@CrossOrigin("http://localhost:4200")
 
 public class CheckoutController {
     // Dependency on the service side layer, final so it must be provided.
     private final CheckoutService checkoutService;
+
     // Constructor injection, Spring 4.3 automatically injects a single controller, no @Autowired needed.
     // Spring looks for a bean and finds @Service bean from (CheckoutServiceImplementation)and injects it.
     public CheckoutController(CheckoutService checkoutService) {
