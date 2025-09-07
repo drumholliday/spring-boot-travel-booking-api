@@ -1,6 +1,7 @@
 package com.example.demo.entities;
 
 // JPA annotations
+
 import jakarta.persistence.*;
 
 // Lombok (auto getters/setters/constructors)
@@ -56,13 +57,13 @@ public class Excursion {
     private Date last_update;
 
     // Many excursions belong to one vacation
-     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-     @JoinColumn(name = "vacation_id", nullable = false)
-     private Vacation vacation;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "vacation_id", nullable = false)
+    private Vacation vacation;
 
     // Read-only Foreign Key mirror for vacation_id
-     @Column(name = "vacation_id", insertable = false, updatable = false)
-     private Long vacation_ID;
+    @Column(name = "vacation_id", insertable = false, updatable = false)
+    private Long vacation_ID;
 
     // Back-reference for the many-to-many via excursion_cartitem
     @ManyToMany(mappedBy = "excursions", fetch = FetchType.LAZY)
