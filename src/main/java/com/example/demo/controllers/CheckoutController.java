@@ -15,6 +15,7 @@ public class CheckoutController {
     // Dependency on the service side layer, final so it must be provided.
     private final CheckoutService checkoutService;
 
+
     // Constructor injection, Spring 4.3 automatically injects a single controller, no @Autowired needed.
     // Spring looks for a bean and finds @Service bean from (CheckoutServiceImplementation)and injects it.
     public CheckoutController(CheckoutService checkoutService) {
