@@ -12,15 +12,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
-
 @CrossOrigin("http://localhost:4200")
 @RepositoryRestResource(collectionResourceRel = "divisions", path = "divisions")
 public interface DivisionRepository extends JpaRepository<Division, Long> {
     // -> /api/divisions/search/findByCountryId?id=1
     @RestResource(path = "findByCountry_Id", rel = "findByCountry_Id")
     Page<Division> findByCountry_Id(@Param("id") Long id, Pageable pageable);
-//    List<Division> findByCountryId(@Param("id") Long countryId);
+
     // Alias that makes frontend call
     // URL http://localhost:8080/api/divisions/search/findByCountryId?id=1
     @RestResource(path = "findByCountryId", rel = "findByCountryId")
