@@ -1,6 +1,7 @@
 package com.example.demo.entities;
 
 // JPA annotations
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -61,16 +62,7 @@ public class Cart {
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-//    // Maps to same column as @JoinColumn above but is not written by JPA.
-//    // *** Don't set customer_ID directly; set the relationship via 'customer'.
-//    @Column(name = "customer_id", insertable = false, updatable = false)
-//    private Long customer_ID;
-
-//    // Try Cascade from Cart (not saveAll)
-//    @OneToMany(mappedBy = "cart", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, orphanRemoval = true)
-//    private Set<CartItem> cartItem = new HashSet<>();
-
-//    Replace Cascade with explicit save path
+    //    Replace Cascade with explicit save path
     @OneToMany(mappedBy = "cart", fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<CartItem> cartItem = new HashSet<>();
 
@@ -80,8 +72,4 @@ public class Cart {
         cartItem.add(item);
         item.setCart(this);
     }
-
-    // Comment out Cascade all for now and remove after testing if problem is solved.
-//    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private Set<CartItem> cartItem;
 }
