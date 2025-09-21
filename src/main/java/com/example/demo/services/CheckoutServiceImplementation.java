@@ -6,10 +6,7 @@ import com.example.demo.dao.CartItemRepository;
 import com.example.demo.dao.CartRepository;
 import com.example.demo.dao.CustomerRepository;
 import com.example.demo.dao.DivisionRepository;
-import com.example.demo.entities.Cart;
-import com.example.demo.entities.CartItem;
-import com.example.demo.entities.Customer;
-import com.example.demo.entities.Division;
+import com.example.demo.entities.*;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -133,6 +130,8 @@ public class CheckoutServiceImplementation implements CheckoutService {
         // Return tracking number
         String trackingNumber = UUID.randomUUID().toString();
         cart.setOrderTrackingNumber(trackingNumber);
+        // Update order status from pending to ordered once order is complete.
+        cart.setStatus(StatusType.ORDERED);
         // Update with tracking
         cartRepo.save(cart);
 
